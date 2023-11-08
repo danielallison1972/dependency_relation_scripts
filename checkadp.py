@@ -3,7 +3,6 @@ import json
 from urllib.request import urlopen
 import urllib.error 
 import sys
-import os
 
 CVEADPPILOT_URL = 'https://cveawg-adp-test.mitre.org/api/cve/'
 
