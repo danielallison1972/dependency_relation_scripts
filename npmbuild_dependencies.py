@@ -23,20 +23,12 @@ def get_components(package,basejson):
 		pkgtext = result.lstrip('window.__context__ = ')
 		pkgjson = json.loads(pkgtext)
 		dependencies = pkgjson['context']['packageVersion']['dependencies']
-		searchstring = 'name":"%s",.*version":.*versions"' % package
-		version = re.findall(searchstring,result)[0]
-		packagenamelength = len(package)
-		version = version[7+ packagenamelength + 29:7+packagenamelength + 34]
+		version = pkgjson['context']['packageVersion']['version']
 		basejson = {"name":package,"version":version,"components" :[]}
-		#dep = re.findall('"dependencies.*}.*"devDep',result)
 		dep = re.findall('"dependencies.*"devDep',result)
 		try:	
-			#dstring = '{' + dep[0][:-8] + '}'
-			#djson = json.loads(dstring)
-			#for dependency in djson["dependencies"]:
 			for dependency in dependencies.keys():
 				subname = dependency
-				#subversion = djson["dependencies"][dependency]
 				subversion = dependencies[dependency]
 				subjson = {"name":subname,"version":subversion,"components":[]}
 				subcomponents = get_components(dependency,subjson)
@@ -44,8 +36,6 @@ def get_components(package,basejson):
 		except IndexError:
 			djson = {}
 	return basejson
-
-
 		
 if __name__ == '__main__':
 	if len(sys.argv) < 2:
